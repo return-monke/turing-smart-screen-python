@@ -77,6 +77,12 @@ def schedule(interval):
 
     return decorator
 
+@async_job("Weather")
+@schedule(timedelta(seconds=config.THEME_DATA['STATS']['WEATHER'].get("INTERVAL", None)).total_seconds())
+def Weather():
+    """ Refresh the weather """
+    # logger.debug("Refresh weather")
+    stats.Weather.get_weather()
 
 @async_job("CPU_Percentage")
 @schedule(timedelta(seconds=config.THEME_DATA['STATS']['CPU']['PERCENTAGE'].get("INTERVAL", None)).total_seconds())

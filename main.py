@@ -197,6 +197,7 @@ if __name__ == "__main__":
     # Run our jobs that update data
     import library.stats as stats
 
+    scheduler.Weather()
     scheduler.CPUPercentage()
     scheduler.CPUFrequency()
     scheduler.CPULoad()

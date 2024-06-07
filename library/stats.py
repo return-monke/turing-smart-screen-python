@@ -27,7 +27,7 @@ import os
 import platform
 import sys
 from typing import List
-
+import requests
 import babel.dates
 from psutil._common import bytes2human
 
@@ -235,6 +235,34 @@ def save_last_value(value: float, last_values: List[float], history_size: int):
 def last_values_list(size: int) -> List[float]:
     return [math.nan] * size
 
+class Weather:
+
+
+    @classmethod
+    def get_weather(cls):
+        try:
+            response = requests.get('https://ipinfo.io')
+            response.raise_for_status()
+            location_data = response.json()
+            location = location_data
+        except requests.RequestException as e:
+            response = f"Error retrieving location data: {e}"
+        finally:
+            url = f'https://wttr.in/{location.get('city')}?format="%l: %x, %t"'
+            response = ''
+            try:
+                response = requests.get(url)
+                response.raise_for_status()
+                weather = response.text.strip()
+                response = weather.replace('\"', '')
+            except requests.RequestException as e:
+                response =  f"Error retrieving weather data: {e}"
+            display_themed_value(
+                theme_data=config.THEME_DATA['STATS']['WEATHER']['TEXT'],
+                value=response,
+                unit="",
+                min_size=4
+            )
 
 class CPU:
     last_values_cpu_percentage = []
